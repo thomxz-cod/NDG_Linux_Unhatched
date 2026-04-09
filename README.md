@@ -2,7 +2,7 @@
 
 ## The basics comands is?
 
-- **ls** - list - used to list the files in the current directory.
+- **ls** - list - By default, when the ls command is used with no options or arguments, it will list the files in the current directory.
 - **cd** - change directory - used to change current directory.
 - **pwd** - print working directory - used to print working directory of the current directory.
 
@@ -11,3 +11,153 @@
 - **-l** - long listing - used for more detailed printing.
 - **-r** - recursive/reverse - In Linux, the `-r` flag typically stands for either Recursive or Reverse, depending on the command you are using. It is one of the most powerful and commonly used modifiers in the terminal.
 - **-v** - verbose - The `-v` command activates verbose mode, showing what the command is doing step by step.
+- **-t** - sort be time - The `-t` sorts files by modification time (newest first)
+
+<br>
+
+---
+
+* Hard link → “é o mesmo arquivo com outro nome”
+* Symlink → “é um atalho para o arquivo”
+
+---
+
+<br>
+
+## File Type
+
+| Symbol | File Type       | Description                                      |
+|--------|----------------|--------------------------------------------------|
+| d      | directory      | A file used to store other files.               |
+| -      | regular file   | Includes readable files, images, binaries, and compressed files. |
+| l      | symbolic link  | Points to another file.                         |
+| s      | socket         | Allows communication between processes.         |
+| p      | pipe           | Allows communication between processes.         |
+| b      | block file     | Used to communicate with hardware.              |
+| c      | character file | Used to communicate with hardware.              |
+
+
+### Permissions
+
+- d`rwxr-xr-x` 2 root   root   4096 Apr 11  2014 upstart
+
+Permissions indicate how certain users can access a file. Keep reading to learn more about permissions.
+
+### Hard Link Count
+
+- -rw-r----- `1` syslog adm    1346 Oct  2 22:17 auth.log
+  
+This number indicates how many hard links point to this file. Hard links are beyond the scope of this module, but are covered in the NDG Linux Essentials course.
+
+### User Owner
+
+- -rw-r----- 1 `syslog` adm     106 Oct  2 19:57 kern.log
+
+User syslog owns this file. Every time a file is created, the ownership is automatically assigned to the user who created it.
+
+### Group Owner
+
+- -rw-rw-r-- 1 root   `utmp` 292584 Oct  2 19:57 lastlog
+
+Indicates which group owns this file
+
+### File Size
+
+- -rw-r----- 1 syslog adm   `19573` Oct  2 22:57 syslog
+
+Directories and larger files may be shown in kilobytes since displaying their size in bytes would present a very large number. Therefore, in the case of a directory, it might actually be a multiple of the block size used for the file system. Block size is the size of a series of data stored in the filesystem.
+
+### Timestamp
+
+- drwxr-xr-x 2 root   root   4096 `Dec  7  2017` fsck
+
+This indicates the time that the file's contents were last modified.
+
+### Filename
+
+- -rw-r--r-- 1 root   root  47816 Dec  7  2017 `bootstrap.log`
+  
+The final field contains the name of the file or directory.
+
+
+#### `Consider This`
+
+In the case of symbolic links, a file that points to another file, the link name will be displayed along with an arrow and the pathname of the original file.
+
+- lrwxrwxrwx. 1 root root 22 Nov 6 2012 `/etc/grub.conf -> ../boot/grub/grub.conf`
+
+Symbolic links are beyond the scope of this module, but are covered in the NDG Linux Essentials course.
+
+---
+
+## Sorting
+By default the output of the ls command is sorted alphabetically by filename. It can sort by other methods as well.
+
+- The -t option will sort the files by timestamp:
+
+```powershell
+sysadmin@localhost:~$ ls -lt /var/log                                           
+total 844                                                                       
+-rw-r----- 1 syslog adm   19573 Oct  2 22:57 syslog                             
+-rw-r----- 1 syslog adm    1346 Oct  2 22:17 auth.log                           
+-rw-r----- 1 syslog adm     547 Oct  2 22:17 cron.log                           
+-rw-rw-r-- 1 root   utmp 292584 Oct  2 19:57 lastlog                            
+-rw-rw-r-- 1 root   utmp    384 Oct  2 19:57 wtmp                               
+-rw-r----- 1 syslog adm     106 Oct  2 19:57 kern.log                           
+-rw-r--r-- 1 root   root  18047 Dec 20  2017 alternatives.log                   
+-rw-r--r-- 1 root   root  32064 Dec 20  2017 faillog                            
+-rw-r----- 1 root   adm   85083 Dec 20  2017 dmesg                              
+-rw-r--r-- 1 root   root 325238 Dec 20  2017 dpkg.log                           
+drwxr-x--- 2 root   adm    4096 Dec 20  2017 apache2                            
+drwxr-xr-x 1 root   root   4096 Dec 20  2017 apt                                
+-rw-r--r-- 1 root   root  47816 Dec  7  2017 bootstrap.log                      
+drwxr-xr-x 2 root   root   4096 Dec  7  2017 fsck                               
+-rw-rw---- 1 root   utmp      0 Dec  7  2017 btmp                               
+drwxr-xr-x 2 root   root   4096 Apr 11  2014 upstart   
+```
+
+- The -S option will sort the files by file size:
+
+```powershell
+sysadmin@localhost:~$ ls -l -S /var/log                                         
+total 844                                                                       
+-rw-r--r-- 1 root   root 325238 Dec 20  2017 dpkg.log                           
+-rw-rw-r-- 1 root   utmp 292584 Oct  2 19:57 lastlog                            
+-rw-r----- 1 root   adm   85083 Dec 20  2017 dmesg                              
+-rw-r--r-- 1 root   root  47816 Dec  7  2017 bootstrap.log                      
+-rw-r--r-- 1 root   root  32064 Dec 20  2017 faillog                            
+-rw-r----- 1 syslog adm   19573 Oct  2 22:57 syslog                             
+-rw-r--r-- 1 root   root  18047 Dec 20  2017 alternatives.log                   
+drwxr-x--- 2 root   adm    4096 Dec 20  2017 apache2                            
+drwxr-xr-x 1 root   root   4096 Dec 20  2017 apt                                
+drwxr-xr-x 2 root   root   4096 Dec  7  2017 fsck                               
+drwxr-xr-x 2 root   root   4096 Apr 11  2014 upstart                            
+-rw-r----- 1 syslog adm    1346 Oct  2 22:17 auth.log                           
+-rw-r----- 1 syslog adm     547 Oct  2 22:17 cron.log                           
+-rw-rw-r-- 1 root   utmp    384 Oct  2 19:57 wtmp                               
+-rw-r----- 1 syslog adm     106 Oct  2 19:57 kern.log                           
+-rw-rw---- 1 root   utmp      0 Dec  7  2017 btmp
+```
+
+- The -r option will reverse the order of any type of sort. Notice the difference when it is added to the previous example:
+
+```powershell
+sysadmin@localhost:~$ ls -lSr /var/log
+total 844                                                                       
+-rw-rw---- 1 root   utmp      0 Dec  7  2017 btmp                               
+-rw-r----- 1 syslog adm     106 Oct  2 19:57 kern.log                           
+-rw-rw-r-- 1 root   utmp    384 Oct  2 19:57 wtmp                               
+-rw-r----- 1 syslog adm     654 Oct  2 23:17 cron.log                           
+-rw-r----- 1 syslog adm    1669 Oct  2 23:17 auth.log                           
+drwxr-xr-x 2 root   root   4096 Apr 11  2014 upstart                            
+drwxr-xr-x 2 root   root   4096 Dec  7  2017 fsck                               
+drwxr-xr-x 1 root   root   4096 Dec 20  2017 apt                                
+drwxr-x--- 2 root   adm    4096 Dec 20  2017 apache2                            
+-rw-r--r-- 1 root   root  18047 Dec 20  2017 alternatives.log                   
+-rw-r----- 1 syslog adm   19680 Oct  2 23:17 syslog                             
+-rw-r--r-- 1 root   root  32064 Dec 20  2017 faillog                            
+-rw-r--r-- 1 root   root  47816 Dec  7  2017 bootstrap.log                      
+-rw-r----- 1 root   adm   85083 Dec 20  2017 dmesg                              
+-rw-rw-r-- 1 root   utmp 292584 Oct  2 19:57 lastlog                            
+-rw-r--r-- 1 root   root 325238 Dec 20  2017 dpkg.log  
+```
